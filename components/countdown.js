@@ -30,7 +30,7 @@ class CountdownTimer extends HTMLElement {
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: 0 8px 22px rgba(125, 26, 41, 0.04), inset 0 0 15px rgba(223, 177, 91, 0.08);
+                    box-shadow: 0 8px 22px rgba(163, 29, 49, 0.04), inset 0 0 15px rgba(223, 177, 91, 0.08);
                     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
                     position: relative;
                 }

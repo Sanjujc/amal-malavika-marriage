@@ -164,42 +164,41 @@ const unmuteOnInteraction = () => {
 
     document.removeEventListener('click', unmuteOnInteraction);
     document.removeEventListener('touchstart', unmuteOnInteraction);
+    document.removeEventListener('scroll', unmuteOnInteraction);
 };
 
 // --- Door Opening Unveil Logic ---
 const introOverlay = document.getElementById('introOverlay');
-const enterBtn = document.getElementById('enterBtn');
 
-if (enterBtn && introOverlay) {
-    enterBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        
-        // Unmute and play background music
-        unmuteOnInteraction();
-        
-        // Trigger parting doors animation
-        introOverlay.classList.add('unveiled');
-        
-        // Trigger content visibility transitions after opening begins
+if (introOverlay) {
+    // Automatically trigger parting doors animation after a short delay on page load
+    window.addEventListener('load', () => {
         setTimeout(() => {
-            document.querySelectorAll('.hero .fade-up, .hero .lotus-decor').forEach(el => el.classList.add('visible'));
-        }, 500);
+            // Trigger parting doors animation
+            introOverlay.classList.add('unveiled');
+            
+            // Trigger content visibility transitions after opening begins
+            setTimeout(() => {
+                document.querySelectorAll('.hero .fade-up, .hero .lotus-decor').forEach(el => el.classList.add('visible'));
+            }, 500);
 
-        // Remove overlay panel from DOM structure after slide ends
-        setTimeout(() => {
-            introOverlay.style.display = 'none';
-        }, 1800);
+            // Remove overlay panel from DOM structure after slide ends
+            setTimeout(() => {
+                introOverlay.style.display = 'none';
+            }, 1800);
+        }, 800); // 800ms elegant delay before opening automatically
     });
 } else {
-    // Fallback listeners for user interactions if overlay isn't present
-    document.addEventListener('click', unmuteOnInteraction);
-    document.addEventListener('touchstart', unmuteOnInteraction);
-    
     // Force visibility on hero immediately as fallback
     setTimeout(() => {
         document.querySelectorAll('.hero .fade-up, .hero .lotus-decor').forEach(el => el.classList.add('visible'));
     }, 500);
 }
+
+// Keep music playback tied to any user interaction (click, scroll, touch) since browsers block autoplay
+document.addEventListener('click', unmuteOnInteraction);
+document.addEventListener('touchstart', unmuteOnInteraction);
+document.addEventListener('scroll', unmuteOnInteraction);
 
 if (audioToggle) {
     audioToggle.addEventListener('click', (e) => {
@@ -218,13 +217,13 @@ if (audioToggle) {
     });
 }
 
-// --- Canvas Lotus Petals Falling Engine ---
+// --- Canvas Marigold (Genda Phool) Petals Shower Engine ---
 const canvas = document.getElementById('petalCanvas');
 if (canvas) {
     const ctx = canvas.getContext('2d');
     let width, height;
     let petals = [];
-    const maxPetals = 85; // Festive dense rose petal shower
+    const maxPetals = 95; // Increased flower shower count for a richer celebratory vibe
 
     const resize = () => {
         width = window.innerWidth;
@@ -235,7 +234,7 @@ if (canvas) {
     window.addEventListener('resize', resize);
     resize();
 
-    class LotusPetal {
+    class MarigoldPetal {
         constructor() {
             this.reset();
             // Start scattered across screen initially
@@ -244,22 +243,21 @@ if (canvas) {
 
         reset() {
             this.x = Math.random() * width;
-            this.y = -20;
+            this.y = -20; // Fall from top of screen
             this.depth = Math.random();
-            this.size = this.depth * 14 + 10; // Petal sizes
-            this.speedY = this.depth * 1.0 + 0.6; // Falling speed
-            this.speedX = (Math.random() - 0.5) * 0.4; // Drift speed
+            this.size = this.depth * 9 + 6; // Delicate petal sizes (6px to 15px)
+            this.speedY = this.depth * 0.9 + 0.6; // Soft falling speed
+            this.speedX = (Math.random() - 0.5) * 0.3; // Gentle sideways drift
             this.angle = Math.random() * Math.PI * 2;
-            this.spinSpeed = (Math.random() - 0.5) * 0.015;
-            this.opacity = this.depth * 0.4 + 0.35; // Soft opacity
-            this.swayRange = Math.random() * 20 + 10;
+            this.spinSpeed = (Math.random() - 0.5) * 0.015; // Slow elegant spin
+            this.opacity = this.depth * 0.4 + 0.55; // Highly visible warm glow (0.55 to 0.95)
             this.swaySpeed = Math.random() * 0.01 + 0.005;
             this.swayPhase = Math.random() * Math.PI * 2;
         }
 
         update() {
             this.y += this.speedY;
-            this.x += this.speedX + Math.sin(this.swayPhase) * 0.4;
+            this.x += this.speedX + Math.sin(this.swayPhase) * 0.25;
             this.swayPhase += this.swaySpeed;
             this.angle += this.spinSpeed;
 
@@ -275,23 +273,25 @@ if (canvas) {
             ctx.rotate(this.angle);
             ctx.beginPath();
             
-            // Draw a detailed organic lotus petal shape
-            ctx.moveTo(0, -this.size / 2);
-            ctx.bezierCurveTo(-this.size / 2, -this.size / 6, -this.size / 2, this.size / 2, 0, this.size);
-            ctx.bezierCurveTo(this.size / 2, this.size / 2, this.size / 2, -this.size / 6, 0, -this.size / 2);
+            const r = this.size / 2;
+            
+            // Draw a traditional heart-shaped or fan-shaped marigold petal
+            ctx.moveTo(0, -r);
+            ctx.bezierCurveTo(-r * 0.85, -r * 0.6, -r * 0.95, r * 0.3, 0, r);
+            ctx.bezierCurveTo(r * 0.95, r * 0.3, r * 0.85, -r * 0.6, 0, -r);
             ctx.closePath();
             
-            // Premium linear gradient inside the petal (crimson rose red to deep velvet maroon)
-            const grad = ctx.createLinearGradient(0, -this.size / 2, 0, this.size);
-            grad.addColorStop(0, `rgba(255, 80, 100, ${this.opacity})`); // Vibrant rose red tip
-            grad.addColorStop(0.6, `rgba(158, 28, 46, ${this.opacity})`); // Crimson body (#9e1c2e adaptation)
-            grad.addColorStop(1, `rgba(100, 15, 25, ${this.opacity * 0.95})`); // Deep velvet maroon base
+            // Vibrant yellow-orange gradient
+            const grad = ctx.createLinearGradient(0, -r, 0, r);
+            grad.addColorStop(0, `rgba(255, 223, 0, ${this.opacity})`);  // Bright yellow tip (#FFDF00)
+            grad.addColorStop(0.65, `rgba(255, 140, 0, ${this.opacity * 0.95})`); // Warm orange body (#FF8C00)
+            grad.addColorStop(1, `rgba(220, 20, 60, ${this.opacity * 0.8})`);    // Rich deep orange base (#DC143C)
             
             ctx.fillStyle = grad;
             ctx.fill();
             
-            // Optional gold highlighted petal edge for premium quality
-            ctx.strokeStyle = `rgba(223, 177, 91, ${this.opacity * 0.25})`;
+            // Soft gold stroke highlight on the petal edge for extra definition
+            ctx.strokeStyle = `rgba(255, 215, 0, ${this.opacity * 0.45})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
             
@@ -301,15 +301,15 @@ if (canvas) {
 
     // Initialize petals
     for (let i = 0; i < maxPetals; i++) {
-        petals.push(new LotusPetal());
+        petals.push(new MarigoldPetal());
     }
 
     const animate = () => {
         ctx.clearRect(0, 0, width, height);
         
-        petals.forEach(petal => {
-            petal.update();
-            petal.draw();
+        petals.forEach(p => {
+            p.update();
+            p.draw();
         });
         
         requestAnimationFrame(animate);
