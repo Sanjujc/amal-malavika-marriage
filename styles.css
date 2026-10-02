@@ -429,6 +429,7 @@ body {
     color: var(--primary-crimson);
     letter-spacing: 2px;
     text-transform: uppercase;
+    line-height: 1.6;
     margin-bottom: 0.5rem;
     font-weight: 500;
 }
