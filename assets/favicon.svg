@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background crimson gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ab1e32"/>
+      <stop offset="50%" stop-color="#9e1c2e"/>
+      <stop offset="100%" stop-color="#640e1b"/>
+    </linearGradient>
+
+    <!-- Metallic Gold gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcedc5"/>
+      <stop offset="25%" stop-color="#dfb15b"/>
+      <stop offset="50%" stop-color="#b88628"/>
+      <stop offset="75%" stop-color="#e8c77b"/>
+      <stop offset="100%" stop-color="#a3741f"/>
+    </linearGradient>
+
+    <!-- Light Gold accent -->
+    <linearGradient id="goldLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff5dc"/>
+      <stop offset="100%" stop-color="#dfb15b"/>
+    </linearGradient>
+
+    <!-- Radial shimmer overlay -->
+    <radialGradient id="shimmer" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Glow Filter -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Shadow Filter -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Base squircle background with gold border -->
+  <rect x="20" y="20" width="472" height="472" rx="110" fill="url(#bgGrad)" stroke="url(#goldGrad)" stroke-width="14" filter="url(#dropShadow)" />
+  <rect x="20" y="20" width="472" height="472" rx="110" fill="url(#shimmer)" />
+
+  <!-- Inner ornate border ring -->
+  <rect x="42" y="42" width="428" height="428" rx="90" fill="none" stroke="url(#goldGrad)" stroke-width="2.5" stroke-dasharray="12 8" opacity="0.75" />
+
+  <!-- Four corner royal ornaments -->
+  <!-- Top Left -->
+  <g transform="translate(66, 66) scale(0.75)" fill="url(#goldGrad)">
+    <circle cx="0" cy="0" r="4" />
+    <path d="M 0,-16 Q 4,-4 16,0 Q 4,4 0,16 Q -4,4 -16,0 Q -4,-4 0,-16 Z" opacity="0.85" />
+  </g>
+  <!-- Top Right -->
+  <g transform="translate(446, 66) scale(0.75)" fill="url(#goldGrad)">
+    <circle cx="0" cy="0" r="4" />
+    <path d="M 0,-16 Q 4,-4 16,0 Q 4,4 0,16 Q -4,4 -16,0 Q -4,-4 0,-16 Z" opacity="0.85" />
+  </g>
+  <!-- Bottom Left -->
+  <g transform="translate(66, 446) scale(0.75)" fill="url(#goldGrad)">
+    <circle cx="0" cy="0" r="4" />
+    <path d="M 0,-16 Q 4,-4 16,0 Q 4,4 0,16 Q -4,4 -16,0 Q -4,-4 0,-16 Z" opacity="0.85" />
+  </g>
+  <!-- Bottom Right -->
+  <g transform="translate(446, 446) scale(0.75)" fill="url(#goldGrad)">
+    <circle cx="0" cy="0" r="4" />
+    <path d="M 0,-16 Q 4,-4 16,0 Q 4,4 0,16 Q -4,4 -16,0 Q -4,-4 0,-16 Z" opacity="0.85" />
+  </g>
+
+  <!-- Ornate Royal Crown Motif at top -->
+  <g transform="translate(256, 120) scale(0.85)" fill="url(#goldGrad)" filter="url(#goldGlow)">
+    <!-- Crown base ring -->
+    <path d="M -40,15 L 40,15 L 35,22 L -35,22 Z" />
+    <!-- Crown peaks -->
+    <path d="M -38,12 L -45,-15 L -20,-2 L 0,-25 L 20,-2 L 45,-15 L 38,12 Z" />
+    <!-- Crown jewels -->
+    <circle cx="-45" cy="-18" r="4" fill="#fff5dc" />
+    <circle cx="0" cy="-28" r="5" fill="#fff5dc" />
+    <circle cx="45" cy="-18" r="4" fill="#fff5dc" />
+  </g>
+
+  <!-- Central Monogram: A & M -->
+  <g filter="url(#goldGlow)">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&amp;family=Pinyon+Script&amp;display=swap');
+      .text-letter {
+        font-family: 'Cinzel', 'Playfair Display', 'Georgia', serif;
+        font-size: 160px;
+        font-weight: 700;
+        fill: url(#goldGrad);
+      }
+      .text-amp {
+        font-family: 'Pinyon Script', 'Playfair Display', cursive, serif;
+        font-size: 135px;
+        font-weight: 400;
+        fill: url(#goldLight);
+      }
+      .text-sub {
+        font-family: 'Cinzel', 'Montserrat', serif;
+        font-size: 22px;
+        font-weight: 600;
+        fill: url(#goldLight);
+        letter-spacing: 7px;
+        opacity: 0.9;
+      }
+    </style>
+
+    <!-- Monogram letters -->
+    <!-- 'A' -->
+    <text x="160" y="325" class="text-letter" text-anchor="middle">A</text>
+    
+    <!-- '&' ampersand in gold script -->
+    <text x="256" y="310" class="text-amp" text-anchor="middle">&amp;</text>
+    
+    <!-- 'M' -->
+    <text x="352" y="325" class="text-letter" text-anchor="middle">M</text>
+  </g>
+
+  <!-- Ornate flourish divider below monogram -->
+  <g fill="none" stroke="url(#goldGrad)" stroke-width="3.5" stroke-linecap="round">
+    <!-- Left flourish curve -->
+    <path d="M 125,372 Q 185,392 238,372" />
+    <!-- Right flourish curve -->
+    <path d="M 274,372 Q 327,392 387,372" />
+    <!-- Center diamond ornament -->
+    <polygon points="256,363 265,372 256,381 247,372" fill="url(#goldGrad)" stroke="none" />
+    <!-- Accent dots -->
+    <circle cx="115" cy="372" r="3.5" fill="url(#goldGrad)" stroke="none" />
+    <circle cx="397" cy="372" r="3.5" fill="url(#goldGrad)" stroke="none" />
+  </g>
+
+  <!-- Subtitle initials accent -->
+  <text x="256" y="422" text-anchor="middle" class="text-sub">AMAL &amp; MALAVIKA</text>
+</svg>

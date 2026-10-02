@@ -141,31 +141,39 @@ mutationObserver.observe(document.body, { childList: true, subtree: true });
 const audioToggle = document.getElementById('audioToggle');
 const bgMusic = document.getElementById('bgMusic');
 let isPlaying = false;
-let isMuted = true;
 
 const playIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
 const pauseIcon = `<div class="music-wave playing"><span></span><span></span><span></span><span></span></div>`;
 
-const unmuteOnInteraction = () => {
-    if (!bgMusic || !isMuted) return;
+const startAudio = () => {
+    if (!bgMusic || isPlaying) return;
     bgMusic.muted = false;
-    bgMusic.volume = 0;
-    bgMusic.play().then(() => {
-        isPlaying = true;
-        isMuted = false;
-        if (audioToggle) audioToggle.innerHTML = pauseIcon;
-        let vol = 0;
-        const fadeIn = setInterval(() => {
-            vol = Math.min(vol + 0.02, 0.7);
-            bgMusic.volume = vol;
-            if (vol >= 0.7) clearInterval(fadeIn);
-        }, 100);
-    }).catch(e => console.log("Autoplay blocked by browser", e));
-
-    document.removeEventListener('click', unmuteOnInteraction);
-    document.removeEventListener('touchstart', unmuteOnInteraction);
-    document.removeEventListener('scroll', unmuteOnInteraction);
+    bgMusic.volume = 0.7;
+    const playPromise = bgMusic.play();
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            isPlaying = true;
+            if (audioToggle) audioToggle.innerHTML = pauseIcon;
+        }).catch(err => {
+            console.log("Autoplay waiting for user gesture:", err);
+        });
+    }
 };
+
+// Attempt to play music immediately as page loads
+startAudio();
+document.addEventListener('DOMContentLoaded', startAudio);
+window.addEventListener('load', startAudio);
+
+// Fallback listener for immediate playback on first user gesture (touch, scroll, click, mousemove)
+const userGestureEvents = ['click', 'touchstart', 'scroll', 'keydown', 'mousemove', 'pointerdown'];
+const onFirstInteraction = () => {
+    startAudio();
+    if (isPlaying) {
+        userGestureEvents.forEach(evt => document.removeEventListener(evt, onFirstInteraction));
+    }
+};
+userGestureEvents.forEach(evt => document.addEventListener(evt, onFirstInteraction, { passive: true }));
 
 // --- Door Opening Unveil Logic ---
 const introOverlay = document.getElementById('introOverlay');
@@ -174,8 +182,9 @@ if (introOverlay) {
     // Automatically trigger parting doors animation after a short delay on page load
     window.addEventListener('load', () => {
         setTimeout(() => {
-            // Trigger parting doors animation
+            // Trigger parting doors animation & attempt playing music
             introOverlay.classList.add('unveiled');
+            startAudio();
             
             // Trigger content visibility transitions after opening begins
             setTimeout(() => {
@@ -195,24 +204,21 @@ if (introOverlay) {
     }, 500);
 }
 
-// Keep music playback tied to any user interaction (click, scroll, touch) since browsers block autoplay
-document.addEventListener('click', unmuteOnInteraction);
-document.addEventListener('touchstart', unmuteOnInteraction);
-document.addEventListener('scroll', unmuteOnInteraction);
-
 if (audioToggle) {
     audioToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (isMuted) {
-            unmuteOnInteraction();
-        } else if (isPlaying) {
+        if (!bgMusic) return;
+        if (isPlaying && !bgMusic.paused) {
             bgMusic.pause();
             audioToggle.innerHTML = playIcon;
             isPlaying = false;
         } else {
-            bgMusic.play();
-            audioToggle.innerHTML = pauseIcon;
-            isPlaying = true;
+            bgMusic.muted = false;
+            bgMusic.volume = 0.7;
+            bgMusic.play().then(() => {
+                audioToggle.innerHTML = pauseIcon;
+                isPlaying = true;
+            }).catch(e => console.log("Audio play error:", e));
         }
     });
 }
@@ -281,17 +287,17 @@ if (canvas) {
             ctx.bezierCurveTo(r * 0.95, r * 0.3, r * 0.85, -r * 0.6, 0, -r);
             ctx.closePath();
             
-            // Vibrant yellow-orange gradient
+            // Vibrant red gradient for falling flower petals
             const grad = ctx.createLinearGradient(0, -r, 0, r);
-            grad.addColorStop(0, `rgba(255, 223, 0, ${this.opacity})`);  // Bright yellow tip (#FFDF00)
-            grad.addColorStop(0.65, `rgba(255, 140, 0, ${this.opacity * 0.95})`); // Warm orange body (#FF8C00)
-            grad.addColorStop(1, `rgba(220, 20, 60, ${this.opacity * 0.8})`);    // Rich deep orange base (#DC143C)
+            grad.addColorStop(0, `rgba(255, 75, 90, ${this.opacity})`);  // Bright rose red tip (#FF4B5A)
+            grad.addColorStop(0.65, `rgba(215, 20, 50, ${this.opacity * 0.95})`); // Rich crimson red body (#D71432)
+            grad.addColorStop(1, `rgba(135, 10, 30, ${this.opacity * 0.85})`);    // Deep velvet burgundy base (#870A1E)
             
             ctx.fillStyle = grad;
             ctx.fill();
             
-            // Soft gold stroke highlight on the petal edge for extra definition
-            ctx.strokeStyle = `rgba(255, 215, 0, ${this.opacity * 0.45})`;
+            // Soft crimson-pink stroke highlight on the petal edge for extra definition
+            ctx.strokeStyle = `rgba(255, 150, 165, ${this.opacity * 0.45})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
             
